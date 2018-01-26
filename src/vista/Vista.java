@@ -23,7 +23,7 @@ public class Vista extends JFrame implements Acciones{
 	
 	Controlador controlador;
 	
-	public Vista(boolean esServidor) {
+	public Vista(Controlador controlador, boolean esServidor) {
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -36,6 +36,8 @@ public class Vista extends JFrame implements Acciones{
 		setResizable(false);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
+		
+		this.controlador = controlador;
 		
 		if (esServidor) {
 			this.setTitle("Servidor");
