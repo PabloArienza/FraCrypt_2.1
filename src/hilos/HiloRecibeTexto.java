@@ -13,10 +13,9 @@ import controlador.Controlador;
  * @author Pablo Arienza Carrera
  * @version 26.1.2018
  */
-public class HiloEntraTexto extends Thread {
+public class HiloRecibeTexto extends Thread{
 
 	private Controlador controlador;
-	private HiloTCP hiloTCP;
 	private DatagramSocket ds;
 	private int puerto;
 
@@ -31,26 +30,25 @@ public class HiloEntraTexto extends Thread {
 	 * @param puerto
 	 *            el puerto por el que se envian los mensajes
 	 */
-	public HiloEntraTexto(Controlador controlador, HiloTCP hiloTCP, int puerto) {
+	public HiloRecibeTexto(Controlador controlador, int puerto) {
 		this.controlador = controlador;
-		this.hiloTCP = hiloTCP;
 		this.puerto = puerto;
 	}// fin del constructor
-
+	
 	public void run() {
 		try {
 			ds = new DatagramSocket(puerto);
-			while (controlador.isConectado()) {
-				controlador.entraMensajeDeTexto("Recepción de texto preparada.");
+			controlador.addMensajeAPantalla("Preparado para recibir texto.");
+			while (true) {
 				byte[] bytes = new byte[1024];
 				DatagramPacket dp = new DatagramPacket(bytes, bytes.length);
 				ds.receive(dp);
 				String mensaje = new String(dp.getData());
 				controlador.entraMensajeDeTexto(mensaje);
-				hiloTCP.enviarMensajeDeControl("Mensaje recibido.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}// fin run
-}// fin HiloEntraTexto
+}// fin HiloRecibeTexto		
+

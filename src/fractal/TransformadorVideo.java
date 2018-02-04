@@ -3,8 +3,7 @@ package fractal;
 import controlador.Controlador;
 
 public class TransformadorVideo {
-	
-	Controlador controlador;
+Controlador controlador;
 	
 	public TransformadorVideo(Controlador controlador) {
 		this.controlador = controlador;
@@ -19,7 +18,4 @@ public class TransformadorVideo {
 		}
 		return imagenSalida;
 	}
-	
-	
-
 }
