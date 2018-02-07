@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import fractal.TransformadorVideo;
 import hilos.HiloCapturaCamara;
@@ -16,6 +17,7 @@ import hilos.HiloRecibeImagen;
 import hilos.HiloRecibeTexto;
 import hilos.HiloSaleImagen;
 import hilos.HiloTCP;
+import vista.Ventana;
 import vista.Vista;
 
 public class Controlador implements ActionListener {
@@ -43,14 +45,51 @@ public class Controlador implements ActionListener {
 	private boolean puedeEnviarVideo = true;
 	private boolean encriptando = false;
 
-	private String password = "contraseña";
+	private String passwordParaEnviar = "UNIR mola";
+	private String passwordParaRecibir = "UNIR Mola";
+	
+	Ventana ventanaFractalSalida;
+	Ventana ventanaFractalEntrada;
 
 	public Controlador(boolean servidor, int puertoTCP) throws UnknownHostException {
+		
+		
+		
+		JTextField passwordEnviar = new JTextField();
+		JTextField passwordRecibir = new JTextField();
+		Object[] message = {
+		    "Contraseña para ENVIAR vídeo encriptado:", passwordEnviar,
+		    "Contraseña para RECIBIR vídeo encriptado:", passwordRecibir
+		};
+
+		int option = JOptionPane.showConfirmDialog(null, message, "Contraseñas", JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+		    	passwordParaEnviar = passwordEnviar.getText();
+		    	passwordParaRecibir = passwordRecibir.getText();
+		} else {
+		    JOptionPane.showMessageDialog(null, "No hay contraseñas para encriptar.");
+		}
+		
+		
+		
+		
+		
 		this.servidor = servidor;
+		transformadorEntrada = new TransformadorVideo(this, passwordParaRecibir, false);
+		transformadorSalida = new TransformadorVideo(this, passwordParaEnviar, true);
 		miIP = InetAddress.getLocalHost();
 		vista = new Vista(this);
+		vista.pintaPanelFractal(transformadorSalida.getFractal().getFractal(), transformadorSalida.getDimensiones()[0], transformadorSalida.getDimensiones()[1]);
 		vista.setVisible(true);
 		vista.inicializar();
+		int x = vista.getLocation().x + 896;
+		int y = vista.getLocation().y;
+		
+		ventanaFractalSalida = new Ventana(transformadorSalida.getFractal().getFractal(), transformadorSalida.getDimensiones()[0], transformadorSalida.getDimensiones()[1], x, y, "enviar");
+		ventanaFractalEntrada = new Ventana(transformadorEntrada.getFractal().getFractal(), transformadorEntrada.getDimensiones()[0], transformadorEntrada.getDimensiones()[1], x, y, "recibir");
+		
+		
+		
 		if (servidor) {
 			hiloTCP = new HiloTCP(this, puertoTCP);
 		} else {
@@ -72,8 +111,7 @@ public class Controlador implements ActionListener {
 		hiloRecibeImagen = new HiloRecibeImagen(this, puertoImagenEntrada);
 		hiloRecibeImagen.start();
 		hiloCapturaCamara = new HiloCapturaCamara(this);
-		transformadorEntrada = new TransformadorVideo(this);
-		transformadorSalida = new TransformadorVideo(this);
+		
 	}
 
 	@Override

@@ -7,17 +7,22 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import controlador.Controlador;
+import fractal.ConjuntoDePuntos;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class Vista extends JFrame implements Acciones {
 	
@@ -29,6 +34,7 @@ public class Vista extends JFrame implements Acciones {
 	private static final long serialVersionUID = 1L;
 	
 	public Vista(Controlador controlador) {
+
 		this.controlador = controlador;
 		
 		addWindowListener(new WindowAdapter() {
@@ -171,5 +177,11 @@ public class Vista extends JFrame implements Acciones {
 
 	public void habilitarEnviarTexto() {
 		btnEnviar.setEnabled(true);
+	}
+
+	public void pintaPanelFractal(ArrayList<ConjuntoDePuntos> fractal, int ancho, int alto) {
+		JPanel panel = new PanelPintaFractal(fractal, ancho, alto);
+		panel.setBounds(570,0,160, 120);
+		getContentPane().add(panel);
 	}
 }

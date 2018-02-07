@@ -1,7 +1,5 @@
 package fractal;
 
-import fractal.*;
-
 /**
  * Genera un fractal de Mandelbrot modificado.
  * 
@@ -34,7 +32,7 @@ public class Mandelbrot2DModificado extends Fractal {
 	public void calculaElConjuntoDelPunto(int[] coordenadas) {
 		contadorDePuntos++;
 		float xC = ((float) coordenadas[0] - (float) coordenadasCentro[0]) / (float) escala;
-		float yC = ((float) coordenadas[1] - (float) coordenadasCentro[1]) / (float) escala;
+		float yC = ((float) coordenadas[1] + (float) coordenadasCentro[1]) / (float) escala;
 		float zX = 0;
 		float zY = 0;
 		// para el punto c = a + b*i

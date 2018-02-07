@@ -22,7 +22,7 @@ public class ConjuntoDePuntos {
 	 */
 	public ConjuntoDePuntos(int iD) {
 		this.iD = iD;
-		this.ultimoLeido = -1;
+		this.ultimoLeido = 0;
 		this.listaDePuntos = new ArrayList<Punto>();
 	}// fin del constructor
 
@@ -55,11 +55,10 @@ public class ConjuntoDePuntos {
 	/**
 	 * Avanza el contador de posición. Si estaba en el último reinicia la lista.
 	 */
-	public void pasaAlSiguientePunto() {
-		ultimoLeido++;
-		if (ultimoLeido >= listaDePuntos.size()) {
-			ultimoLeido = 0;
-		}
+	public void pasaAlSiguientePunto(int avance) {
+		ultimoLeido += avance;
+		if (ultimoLeido >= listaDePuntos.size()) 
+			ultimoLeido -= listaDePuntos.size();
 	}// fin pasaAlSiguientePunto
 
 	/**
@@ -90,7 +89,11 @@ public class ConjuntoDePuntos {
 	public Punto getPunto() {
 		return listaDePuntos.get(ultimoLeido);
 	}// fin getPunto
-
+	
+	public Punto getPunto(int index) {
+		return listaDePuntos.get(index);
+	}// fin getPunto
+	
 	/**
 	 * Devuelve el número de puntos en el conjunto
 	 * 

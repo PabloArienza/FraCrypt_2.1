@@ -140,8 +140,10 @@ public abstract class Fractal {
 	 *            la cantidad de conjuntos que se avanza
 	 */
 	public void pasaAlSiguienteConjunto(int avance) {
-		ultimoLeido = (ultimoLeido + avance) % fractal.size();
-		fractal.get(ultimoLeido).pasaAlSiguientePunto();
+		ultimoLeido += avance;
+		if(ultimoLeido >= fractal.size())
+			ultimoLeido -= fractal.size();
+		fractal.get(ultimoLeido).pasaAlSiguientePunto(avance);
 	}// fin pasaAlSiguienteConjunto
 
 	/**
@@ -153,4 +155,17 @@ public abstract class Fractal {
 	public void mutarElPunto(int avance) {
 		fractal.get(ultimoLeido).mutarElPunto(avance);
 	}// fin mutarElPunto
+	
+	public ArrayList<ConjuntoDePuntos> getFractal() {
+		return fractal;
+	}
+	
+	public void imprimeDatos() {
+		int numConjuntos = fractal.size();
+		int puntos = 0;
+		for (ConjuntoDePuntos c : fractal) {
+			puntos += c.getTamLista();
+		}
+		System.out.println("Conjuntos: " + numConjuntos + " - Puntos: " + puntos);
+	}
 }// fin Fractal
