@@ -46,7 +46,14 @@ public class HiloTCP extends Thread {
 			String mensaje = recibirMensaje();
 			if(mensaje.equals("Imagen Entregada.")) {
 				controlador.setImagenEntregada();
-			}else {
+			}else if(mensaje.equals("Encriptando entrada")) {
+				controlador.setEncriptandoEntrada(true);
+				enviarMensaje("Recibido encriptando");
+			}else if(mensaje.equals("Desencriptando entrada")) {
+				controlador.setEncriptandoEntrada(false);
+			}else if(mensaje.equals("Recibido encriptando")) {
+				controlador.recibidoEncriptando();
+			}else{
 				controlador.addMensajeAPantalla("Yo: " + mensaje);
 			}
 		}

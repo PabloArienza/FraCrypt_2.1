@@ -57,7 +57,7 @@ public class ConjuntoDePuntos {
 	 */
 	public void pasaAlSiguientePunto(int avance) {
 		ultimoLeido += avance;
-		if (ultimoLeido >= listaDePuntos.size()) 
+		while (ultimoLeido >= listaDePuntos.size()) 
 			ultimoLeido -= listaDePuntos.size();
 	}// fin pasaAlSiguientePunto
 

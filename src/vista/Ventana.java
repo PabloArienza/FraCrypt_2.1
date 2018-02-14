@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import fractal.ConjuntoDePuntos;
 
+
 /**
  * Contiene el panel en el que se pintan los conjuntos de puntos seleccionados para el tratamiento de datos
  * 
@@ -24,8 +25,8 @@ public class Ventana {
 	 * @param alto el alto de la ventana
 	 */
 	public Ventana(ArrayList<ConjuntoDePuntos> listaDeConjuntos, int ancho, int alto, int xVista, int yVista, String enviarORecibir){
-		ventana = new JFrame("Fractal generado para " + enviarORecibir);
-		ventana.setSize(ancho,alto);		
+		ventana = new JFrame("Fractal para " + enviarORecibir);
+		ventana.setSize(160,149);		
 		ventana.add(new PanelPintaFractal(listaDeConjuntos, ancho, alto));
 		ventana.setVisible(true);
 		ventana.setLocation(xVista, yVista);

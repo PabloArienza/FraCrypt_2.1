@@ -117,9 +117,9 @@ public class TransformadorVideo {
 		return shaCortado;
 	}// fin setParametros	
 
-	public byte[] transformaImagen(byte[] imagen) {
+	public byte[] transformaImagen(byte[] imagen, boolean encriptando) {
 		byte[] imagenSalida = null;
-		if(controlador.isEncriptando()) {
+		if(encriptando) {
 			imagenSalida = new byte[imagen.length];
 			Punto punto = fractal.leePunto();
 			for (int i = 0; i < imagen.length; i++) {			
@@ -129,7 +129,7 @@ public class TransformadorVideo {
 					}
 					imagenSalida[i] = (byte) (imagen[i] ^ (operadorXOR) % 256);
 					int avance = 0;
-					if (encriptando) {
+					if (this.encriptando) {
 						avance = Math.abs(imagen[i]);
 					} else {
 						avance = Math.abs(imagenSalida[i]);

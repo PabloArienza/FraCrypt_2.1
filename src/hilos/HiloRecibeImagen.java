@@ -13,6 +13,7 @@ public class HiloRecibeImagen extends Thread {
 	private int puerto;
 	
 	public HiloRecibeImagen(Controlador controlador, int puerto) {
+		this.setName("Hilo de entrada de imagen");
 		this.controlador = controlador;
 		this.puerto = puerto;
 	}

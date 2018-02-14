@@ -19,6 +19,7 @@ public class HiloSaleImagen extends Thread {
 	private byte[] imagen;
 
 	public HiloSaleImagen(Controlador controlador, InetAddress suIP, int puerto) {
+		this.setName("Hilo de salida de Imagen");
 		this.controlador = controlador;
 		this.suIP = suIP;
 		this.puerto = puerto;
@@ -54,5 +55,9 @@ public class HiloSaleImagen extends Thread {
 
 	public void setEntregado() {
 		entregado = true;
+	}
+	
+	public void esperar() {
+		entregado = false;
 	}
 }

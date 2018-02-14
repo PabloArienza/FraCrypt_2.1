@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import benchmarking.CalculadoraFPS;
 import fractal.TransformadorVideo;
 import hilos.HiloCapturaCamara;
 import hilos.HiloEnviaTexto;
@@ -30,7 +31,9 @@ public class Controlador implements ActionListener {
 	private HiloSaleImagen hiloSaleImagen;
 	private TransformadorVideo transformadorEntrada;
 	private TransformadorVideo transformadorSalida;
-
+	private CalculadoraFPS calculadoraFPSEntrada;
+	private CalculadoraFPS calculadoraFPSSalida;
+	
 	private InetAddress miIP;
 	private InetAddress suIP;
 
@@ -43,13 +46,15 @@ public class Controlador implements ActionListener {
 	private boolean camaraEncendida = false;
 	private boolean transmitiendo = false;
 	private boolean puedeEnviarVideo = true;
-	private boolean encriptando = false;
-
+	private boolean encriptandoSalida = false;
+	private boolean encriptandoEntrada = false;
+	
 	private String passwordParaEnviar = "UNIR mola";
-	private String passwordParaRecibir = "UNIR Mola";
+	private String passwordParaRecibir = "UNIR Mola y es grande";
 	
 	Ventana ventanaFractalSalida;
 	Ventana ventanaFractalEntrada;
+	
 
 	public Controlador(boolean servidor, int puertoTCP) throws UnknownHostException {
 		
@@ -85,7 +90,6 @@ public class Controlador implements ActionListener {
 		int x = vista.getLocation().x + 896;
 		int y = vista.getLocation().y;
 		
-		ventanaFractalSalida = new Ventana(transformadorSalida.getFractal().getFractal(), transformadorSalida.getDimensiones()[0], transformadorSalida.getDimensiones()[1], x, y, "enviar");
 		ventanaFractalEntrada = new Ventana(transformadorEntrada.getFractal().getFractal(), transformadorEntrada.getDimensiones()[0], transformadorEntrada.getDimensiones()[1], x, y, "recibir");
 		
 		
@@ -111,7 +115,7 @@ public class Controlador implements ActionListener {
 		hiloRecibeImagen = new HiloRecibeImagen(this, puertoImagenEntrada);
 		hiloRecibeImagen.start();
 		hiloCapturaCamara = new HiloCapturaCamara(this);
-		
+		calculadoraFPSEntrada = new CalculadoraFPS();
 	}
 
 	@Override
@@ -136,7 +140,9 @@ public class Controlador implements ActionListener {
 			}
 			break;
 		case Vista.ENCRIPTAR:
-			encriptando = !encriptando;
+			encriptandoSalida = !encriptandoSalida;
+			hiloSaleImagen.esperar();
+			hiloTCP.enviarMensaje("Encriptando entrada");			
 			break;
 		}
 		vista.ajustarBotones();
@@ -199,7 +205,7 @@ public class Controlador implements ActionListener {
 		hiloCapturaCamara.suspend();
 		camaraEncendida = false;
 		transmitiendo = false;
-		encriptando = false;
+		encriptandoSalida = false;
 	}// fin apagarCamra
 
 	/**
@@ -237,6 +243,7 @@ public class Controlador implements ActionListener {
 	public void transmitir() {
 		transmitiendo = true;
 		hiloSaleImagen = new HiloSaleImagen(this, suIP, puertoImagenSalida);
+		calculadoraFPSSalida = new CalculadoraFPS();
 		hiloSaleImagen.start();
 	}// fin transmitir
 
@@ -245,6 +252,7 @@ public class Controlador implements ActionListener {
 	 */
 	public void pararTransmision() {
 		transmitiendo = false;
+		calculadoraFPSSalida = null;
 	}// fin pararTransmision
 
 	/**
@@ -255,17 +263,19 @@ public class Controlador implements ActionListener {
 	 * @throws IOException
 	 */
 	public void saleImagen() throws IOException {
-		byte[] imagen = hiloCapturaCamara.getImagen();
+		byte[] imagen = hiloCapturaCamara.getImagen();		
+		imagen = transformadorSalida.transformaImagen(imagen, encriptandoSalida);
 		hiloSaleImagen.setImagen(imagen);
-		imagen = transformadorSalida.transformaImagen(imagen);
 		vista.pintaTransmision(imagen);
+		vista.pintaFpsSalida(calculadoraFPSSalida.framePintado());
 
 	}// fin saleImagen
 
 	public void entraImagen(byte[] imagen) throws IOException {
-		imagen = transformadorEntrada.transformaImagen(imagen);
+		imagen = transformadorEntrada.transformaImagen(imagen, encriptandoEntrada);
 		hiloTCP.enviarMensaje("Imagen Entregada.");
 		vista.pintaInterlocutor(imagen);
+		vista.pintaFpsEntrada(calculadoraFPSEntrada.framePintado());
 	}
 
 	public void setImagenEntregada() {
@@ -278,10 +288,23 @@ public class Controlador implements ActionListener {
 	 * @return encriptando o no
 	 */
 	public boolean isEncriptando() {
-		return encriptando;
+		return encriptandoSalida;
 	}// fin isEncriptando
 
 	public void habilitarEnvioTexto() {
 		vista.habilitarEnviarTexto();
+	}
+
+	public void setEncriptandoEntrada(boolean encriptandoEntrada) {
+		this.encriptandoEntrada  = encriptandoEntrada;
+		if(encriptandoEntrada) {
+			vista.addMensajeRecibidoTCP("Recibiendo vídeo encriptado");
+		}else {
+			vista.addMensajeRecibidoTCP("Recibiendo vídeo en claro");
+		}
+	}
+
+	public void recibidoEncriptando() {
+		hiloSaleImagen.setEntregado();
 	}
 }

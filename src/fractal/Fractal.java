@@ -141,7 +141,7 @@ public abstract class Fractal {
 	 */
 	public void pasaAlSiguienteConjunto(int avance) {
 		ultimoLeido += avance;
-		if(ultimoLeido >= fractal.size())
+		while(ultimoLeido >= fractal.size())
 			ultimoLeido -= fractal.size();
 		fractal.get(ultimoLeido).pasaAlSiguientePunto(avance);
 	}// fin pasaAlSiguienteConjunto

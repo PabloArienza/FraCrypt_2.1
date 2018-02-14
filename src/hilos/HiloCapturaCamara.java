@@ -42,6 +42,12 @@ public class HiloCapturaCamara extends Thread {
 		while (controlador.isCamaraEncendida()) {
 			imagen = camara.getImage();
 			controlador.pintaCamara(imagen);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		camara.close();
 	}// fin run

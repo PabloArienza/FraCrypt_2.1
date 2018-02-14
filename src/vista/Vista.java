@@ -55,6 +55,17 @@ public class Vista extends JFrame implements Acciones {
 			this.setTitle("Cliente");
 		}
 		
+		lblFpsEntrada = new JLabel();	
+		lblFpsEntrada.setForeground(Color.WHITE);
+		lblFpsEntrada.setBounds(250, 120, 160, 25);
+		getContentPane().add(lblFpsEntrada);
+		
+		lblFpsSalida = new JLabel();
+		lblFpsSalida.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		lblFpsSalida.setForeground(Color.WHITE);
+		lblFpsSalida.setBounds(730, 0, 160, 20);
+		getContentPane().add(lblFpsSalida);		
+		
 		taMensajes = new JTextArea();
 		taMensajes.setBackground(Color.LIGHT_GRAY);
 		JScrollPane scroll = new JScrollPane(taMensajes);
@@ -91,12 +102,6 @@ public class Vista extends JFrame implements Acciones {
 		btnTransmitir.setBounds(410, 40, 160, 40);
 		getContentPane().add(btnTransmitir);
 		
-		lblInterlocutor = new JLabel("");
-		lblInterlocutor.setBounds(250, 120, 640, 480);
-		lblInterlocutor.setOpaque(true);
-		lblInterlocutor.setBackground(Color.GRAY);
-		getContentPane().add(lblInterlocutor);
-		
 		btnEncriptar = new JButton("Encriptar");
 		btnEncriptar.setBounds(410, 80, 160, 40);
 		getContentPane().add(btnEncriptar);
@@ -104,6 +109,12 @@ public class Vista extends JFrame implements Acciones {
 		btnEnviar.setEnabled(false);
 		btnTransmitir.setEnabled(false);
 		btnEncriptar.setEnabled(false);
+		
+		lblInterlocutor = new JLabel("");
+		lblInterlocutor.setBounds(250, 120, 640, 480);
+		lblInterlocutor.setOpaque(true);
+		lblInterlocutor.setBackground(Color.GRAY);
+		getContentPane().add(lblInterlocutor);
 	}
 	
 	private JTextArea taMensajes;
@@ -112,8 +123,10 @@ public class Vista extends JFrame implements Acciones {
 	private JLabel lblMiCamara;
 	private JButton btnCamara;
 	private JLabel lblTransmision;
+	private JLabel lblFpsSalida;
 	private JButton btnTransmitir;
 	private JLabel lblInterlocutor;
+	private JLabel lblFpsEntrada;
 	private JButton btnEncriptar;
 
 	public void addMensajeRecibidoTCP(String mensaje) {
@@ -145,6 +158,7 @@ public class Vista extends JFrame implements Acciones {
 
 	public void pintaTransmision(byte[] imagen) throws IOException {
 		Image im = ImageIO.read(new ByteArrayInputStream(imagen));
+		if(!controlador.isEncriptando())
 		lblTransmision.setIcon(new ImageIcon(im.getScaledInstance(160, 120, Image.SCALE_FAST)));
 	}
 
@@ -181,7 +195,17 @@ public class Vista extends JFrame implements Acciones {
 
 	public void pintaPanelFractal(ArrayList<ConjuntoDePuntos> fractal, int ancho, int alto) {
 		JPanel panel = new PanelPintaFractal(fractal, ancho, alto);
-		panel.setBounds(570,0,160, 120);
+		panel.setBounds(570,0,160, 145);
+		
 		getContentPane().add(panel);
+	}
+	
+	public void pintaFpsEntrada(String media) {
+		lblFpsEntrada.setText("FPS: " + media) ;
+	}
+	
+	public void pintaFpsSalida(String media) {
+		lblFpsSalida.setText("FPS: " + media) ;	
+		
 	}
 }
