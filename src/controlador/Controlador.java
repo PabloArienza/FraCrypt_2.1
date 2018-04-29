@@ -50,7 +50,7 @@ public class Controlador implements ActionListener {
 	private boolean encriptandoEntrada = false;
 	
 	private String passwordParaEnviar = "UNIR mola";
-	private String passwordParaRecibir = "UNIR Mola y es grande";
+	private String passwordParaRecibir = "UNIR mola";
 	
 	Ventana ventanaFractalSalida;
 	Ventana ventanaFractalEntrada;
@@ -280,6 +280,7 @@ public class Controlador implements ActionListener {
 
 	public void setImagenEntregada() {
 		hiloSaleImagen.setEntregado();
+//		vista.addMensajeRecibidoTCP("Imagen entregada");
 	}
 
 	/**

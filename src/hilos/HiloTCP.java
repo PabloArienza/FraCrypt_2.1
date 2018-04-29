@@ -105,6 +105,7 @@ public class HiloTCP extends Thread {
 			bw.write(mensaje);
 			bw.newLine();
 			bw.flush();
+//			controlador.addMensajeAPantalla("Imagen entregada");
 		} catch (IOException e) {
 		}
 	}

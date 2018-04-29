@@ -36,10 +36,11 @@ public class HiloSaleImagen extends Thread {
 		while (controlador.isTransmitiendo()) {
 			if (entregado) {
 				try {
+					entregado = false;
 					controlador.saleImagen();
 					DatagramPacket dp = new DatagramPacket(imagen, imagen.length, suIP, puerto);
 					ds.send(dp);
-					entregado = false;
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
